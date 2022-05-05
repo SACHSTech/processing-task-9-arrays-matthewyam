@@ -2,6 +2,7 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 	
+  float[] circleY = new float[25];
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -9,6 +10,9 @@ public class Sketch extends PApplet {
   public void settings() {
 	// put your size call here
     size(400, 400);
+    for (int i = 0; i < circleY.length; i++) {
+      circleY[i] = random(height);
+    }
   }
 
   /** 
@@ -24,13 +28,48 @@ public class Sketch extends PApplet {
    */
   public void draw() {
 	  
-	// sample code, delete this stuff
-    stroke(128);
-    line(150, 25, 270, 350);  
 
-    stroke(255);
-    line(50, 125, 70, 50);  
-  }
+    
+    background(210, 255, 173);
+    
+    ball();
+    
+    fill(255,255,255);
+    for (int i = 0; i < circleY.length; i++) {
+      float circleX = width * i / circleY.length;
+      ellipse(circleX, circleY[i], 25, 25);
   
-  // define other methods down here.
+      circleY[i]++;
+  
+      if (circleY[i] > height) {
+        circleY[i] = 0;
+      }
+
+      if (keyPressed){
+        if (keyCode == UP){
+          circleY[i] -= 0.5;
+        }
+        
+        if (keyCode == DOWN){
+          circleY[i] += 2;
+        }
+      }
+    }
+    
+    
+  }
+
+  public void ball(){
+    float ballUp = 0;
+    float ballDown = 0;
+    float ballLeft = 0;
+    float ballRight = 0;
+
+    
+    fill(0,0,255);
+    ellipse(200, 200, 20, 20);
+
+
+  }
 }
+  
