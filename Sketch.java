@@ -2,74 +2,177 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 	
-  float[] circleY = new float[25];
+  float[] circleY = new float[10];
+  float[] circleX = new float[10];
+  boolean[] snow = new boolean[10];
 	
-  /**
-   * Called once at the beginning of execution, put your size all in this method
-   */
+  boolean blooUp = false;
+  boolean blooDown = false;
+  boolean blooLeft = false;
+  boolean blooRight = false;
+  
+
+  float blooX = 200;
+  float blooY = 200; 
+  int fallSpeed = 2;
+
+  float health = 90;
+  float healthCap = 90;
+  float squareW = 90;
+  float dist;  
+
   public void settings() {
-	// put your size call here
     size(400, 400);
-    for (int i = 0; i < circleY.length; i++) {
-      circleY[i] = random(height);
-    }
+    
   }
 
-  /** 
-   * Called once at the beginning of execution.  Add initial set up
-   * values here i.e background, stroke, fill etc.
-   */
+ 
   public void setup() {
     background(210, 255, 173);
+    for (int i = 0; i < circleY.length; i++) {
+      circleY[i] = random(height);
+      circleX[i] = random(width);
+      snow[i] = true;
+    }
+    
   }
 
-  /**
-   * Called repeatedly, anything drawn to the screen goes here
-   */
-  public void draw() {
-	  
+  
 
+  public void draw() {
     
     background(210, 255, 173);
     
     ball();
     
-    fill(255,255,255);
-    for (int i = 0; i < circleY.length; i++) {
-      float circleX = width * i / circleY.length;
-      ellipse(circleX, circleY[i], 25, 25);
-  
-      circleY[i]++;
-  
-      if (circleY[i] > height) {
-        circleY[i] = 0;
-      }
+    rain();
+   
+    moveBall();
+    
+    hpBar();  
 
-      if (keyPressed){
-        if (keyCode == UP){
-          circleY[i] -= 0.5;
-        }
-        
-        if (keyCode == DOWN){
-          circleY[i] += 2;
-        }
-      }
+    if (health == 0){
+      background(255,255,255);
+      stop();
     }
     
+  
+  }
+
+  public void rain(){
     
+    fill(255,255,255);
+      for (int i = 0; i < circleY.length; i++) {
+        if (snow[i] == true){
+        ellipse(circleX[i], circleY[i], 20, 20);
+        }
+      }
+      for (int i = 0; i < circleY.length; i++) {
+      circleY[i] += fallSpeed;
+
+        if (circleY[i] > height) {
+          circleY[i] = 0;
+        }
+
+        circleY[i] += fallSpeed;
+      
+          if (circleY[i] > height) {
+            circleY[i] = 0;
+          }
+
+        if (dist(blooX, blooY, circleX[i], circleY[i]) <= (10) && (snow[i] == true)){
+          health -= 30;
+          snow[i] = false;
+          }
+        }
+      }
+    
+
+
+  public void moveBall(){
+
+    if(blooUp){
+      blooY--;
+    }
+    if(blooDown){
+      blooY++;
+    }
+    if(blooLeft){
+      blooX--;
+    }
+    if(blooRight){
+      blooX++;
+    }  
   }
 
   public void ball(){
-    float ballUp = 0;
-    float ballDown = 0;
-    float ballLeft = 0;
-    float ballRight = 0;
-
-    
     fill(0,0,255);
-    ellipse(200, 200, 20, 20);
-
+    ellipse(blooX, blooY, 20, 20);
+  }
+  
+  public void keyPressed(){
+    if (key == 'w') {
+      blooUp = true;
+    } 
+    else if (key == 's') {
+      blooDown = true;
+    } 
+    else if(key == 'a'){
+      blooLeft = true;
+    }
+    else if(key == 'd'){
+      blooRight = true; 
+    }
+    
+    
+    if (keyCode == UP){
+      fallSpeed = 1;
+    }
+        
+    if (keyCode == DOWN){
+      fallSpeed = 3;
+      }
 
   }
+  public void keyReleased(){
+    if (key == 'w') {
+      blooUp = false;
+    } 
+    else if (key == 's') {
+      blooDown = false;
+    } 
+    else if(key == 'a'){
+      blooLeft = false;
+    }
+    else if(key == 'd'){
+      blooRight = false; 
+    }
+
+    if (keyCode == UP){
+      fallSpeed = 2;
+    }
+        
+    if (keyCode == DOWN){
+      fallSpeed = 2;
+      }
+  }
+
+  public void hpBar(){
+    float drawWidth = (health / healthCap) * squareW;
+    fill(255,0,0);
+     rect(0, 0, drawWidth, 30);
+ 
+   stroke(0);
+   noFill();
+   rect(0, 0, 30, 30);
+   rect(0, 0, 60, 30);
+   rect(0, 0, 90, 30);
+
+  }
+
+  
+
+  
 }
+
   
