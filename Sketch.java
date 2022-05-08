@@ -4,7 +4,7 @@ public class Sketch extends PApplet {
 	
   float[] circleY = new float[10];
   float[] circleX = new float[10];
-  boolean[] snow = new boolean[10];
+  boolean[] snow = new boolean[20];
 	
   boolean blooUp = false;
   boolean blooDown = false;
@@ -19,7 +19,8 @@ public class Sketch extends PApplet {
   float health = 90;
   float healthCap = 90;
   float squareW = 90;
-  float dist;  
+  float dist;
+  boolean click = false;  
 
   public void settings() {
     size(400, 400);
@@ -64,7 +65,7 @@ public class Sketch extends PApplet {
     fill(255,255,255);
       for (int i = 0; i < circleY.length; i++) {
         if (snow[i] == true){
-        ellipse(circleX[i], circleY[i], 20, 20);
+        ellipse(circleX[i], circleY[i], 30, 30);
         }
       }
       for (int i = 0; i < circleY.length; i++) {
@@ -78,14 +79,20 @@ public class Sketch extends PApplet {
       
           if (circleY[i] > height) {
             circleY[i] = 0;
+            snow[i] = true;
+            circleX[i] = random(width);
           }
-
-        if (dist(blooX, blooY, circleX[i], circleY[i]) <= (10) && (snow[i] == true)){
-          health -= 30;
-          snow[i] = false;
-          }
+      
+      if (dist(blooX, blooY, circleX[i], circleY[i]) <= (20) && (snow[i] == true)){
+        health -= 30;
+        snow[i] = false;
+        }
+      
+      if(click && (dist(mouseX, mouseY, circleX[i], circleY[i]) <= (20))){
+        snow[i] = false;
         }
       }
+    }
     
 
 
@@ -169,7 +176,13 @@ public class Sketch extends PApplet {
    rect(0, 0, 90, 30);
 
   }
-
+  
+  public void mousePressed(){
+    click = true;
+  }
+  public void mouseReleased(){
+    click = false;
+}
   
 
   
