@@ -2,6 +2,7 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 	
+  //Global Variables
   float[] circleY = new float[10];
   float[] circleX = new float[10];
   boolean[] snow = new boolean[20];
@@ -21,6 +22,7 @@ public class Sketch extends PApplet {
   float squareW = 90;
   float dist;
   boolean click = false;  
+
 
   public void settings() {
     size(400, 400);
@@ -44,14 +46,16 @@ public class Sketch extends PApplet {
     
     background(210, 255, 173);
     
+    //Calls methods
     ball();
     
-    rain();
+    fall();
    
     moveBall();
     
     hpBar();  
 
+    //Makes it so if the HP bar is zero, it turns the screen white and stops the program
     if (health == 0){
       background(255,255,255);
       stop();
@@ -60,8 +64,12 @@ public class Sketch extends PApplet {
   
   }
 
-  public void rain(){
+  /**
+   * Calls the snow fall with hit detection
+   */
+  public void fall(){
     
+    //Creates the snow and makes it fall randomly
     fill(255,255,255);
       for (int i = 0; i < circleY.length; i++) {
         if (snow[i] == true){
@@ -83,19 +91,21 @@ public class Sketch extends PApplet {
             circleX[i] = random(width);
           }
       
+      //Detection if you get hit by snow
       if (dist(blooX, blooY, circleX[i], circleY[i]) <= (20) && (snow[i] == true)){
         health -= 30;
         snow[i] = false;
         }
-      
+      //Detection if you click on a piece of snow
       if(click && (dist(mouseX, mouseY, circleX[i], circleY[i]) <= (20))){
         snow[i] = false;
         }
       }
     }
     
-
-
+/**
+ * Controls used to move the blue ball
+ */
   public void moveBall(){
 
     if(blooUp){
@@ -112,11 +122,18 @@ public class Sketch extends PApplet {
     }  
   }
 
+/**
+ * Draws the blue ball on screen
+ */
   public void ball(){
     fill(0,0,255);
     ellipse(blooX, blooY, 20, 20);
   }
   
+
+/**
+ * Detects what key has been pressed
+ */
   public void keyPressed(){
     if (key == 'w') {
       blooUp = true;
@@ -141,6 +158,10 @@ public class Sketch extends PApplet {
       }
 
   }
+
+/**
+ * Detects what key has been released
+ */
   public void keyReleased(){
     if (key == 'w') {
       blooUp = false;
@@ -164,6 +185,9 @@ public class Sketch extends PApplet {
       }
   }
 
+/** 
+ * Draws the HP bar on screen
+ */
   public void hpBar(){
     float drawWidth = (health / healthCap) * squareW;
     fill(255,0,0);
@@ -177,9 +201,16 @@ public class Sketch extends PApplet {
 
   }
   
+  /**
+   * Detects when mouse is pressed
+   */
   public void mousePressed(){
     click = true;
   }
+
+/** 
+ * Detects when mouse is released
+ */
   public void mouseReleased(){
     click = false;
 }
